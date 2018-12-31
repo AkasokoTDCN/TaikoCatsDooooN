@@ -146,7 +146,7 @@ namespace DTXMania
                                 else
                                 {
                                     this.t小文字表示(CDTXMania.Skin.Game_Balloon_Combo_Number_Ex_X[i], CDTXMania.Skin.Game_Balloon_Combo_Number_Ex_Y[i], string.Format("{0,4:###0}", this.nCombo_渡[i]));
-                                    CDTXMania.Tx.Balloon_Number_Combo.t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Balloon_Combo_Text_Ex_X[i], CDTXMania.Skin.Game_Balloon_Combo_Text_Ex_Y[i] + 7, new Rectangle(0, 54, 77, 32));
+                                    CDTXMania.Tx.Balloon_Number_Combo.t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Balloon_Combo_Text_Ex_X[i], CDTXMania.Skin.Game_Balloon_Combo_Text_Ex_Y[i] + 25, new Rectangle(0, 54, 77, 32));
                                 }
                             }
                             else if (CDTXMania.ConfigIni.ShinuchiMode == false)
