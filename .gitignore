@@ -7,6 +7,7 @@
 *.log
 *.pdb
 *.db
+*.pfx
 /packages
 /Test/Capture_img
 /Test/Config.ini
