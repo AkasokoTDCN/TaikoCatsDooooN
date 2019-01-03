@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
@@ -31,8 +31,6 @@ namespace DTXMania
             ctChara_GoGo = new CCounter();
             ctChara_Clear = new CCounter();
 
-            this.ctキャラクターアクション_ミス五回 = new CCounter();
-            this.ctキャラクターアクション_叩いてミス = new CCounter();
             this.ctキャラクターアクション_10コンボ = new CCounter();
             this.ctキャラクターアクション_10コンボMAX = new CCounter();
             this.ctキャラクターアクション_ゴーゴースタート = new CCounter();
@@ -58,9 +56,6 @@ namespace DTXMania
             ctChara_Normal = null;
             ctChara_GoGo = null;
             ctChara_Clear = null;
-
-            this.ctキャラクターアクション_ミス五回 = null;
-            this.ctキャラクターアクション_叩いてミス = null;
             this.ctキャラクターアクション_10コンボ = null;
             this.ctキャラクターアクション_10コンボMAX = null;
             this.ctキャラクターアクション_ゴーゴースタート = null;
@@ -90,7 +85,7 @@ namespace DTXMania
             if (CharaAction_Balloon_Delay != null) CharaAction_Balloon_Delay.n現在の値 = CharaAction_Balloon_Delay.n終了値;
             base.OnManagedリソースの作成();
         }
-        //明日の世皿！！！
+
         public override void OnManagedリソースの解放()
         {
             base.OnManagedリソースの解放();
@@ -101,9 +96,6 @@ namespace DTXMania
             if (ctChara_Normal != null || CDTXMania.Skin.Game_Chara_Ptn_Normal != 0) ctChara_Normal.t進行LoopDb();
             if (ctChara_GoGo != null || CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0) ctChara_GoGo.t進行LoopDb();
             if (ctChara_Clear != null || CDTXMania.Skin.Game_Chara_Ptn_Clear != 0) ctChara_Clear.t進行LoopDb();
-
-            if (this.ctキャラクターアクション_ミス五回 != null || CDTXMania.Skin.Game_Chara_Ptn_Miss_5 != 0) this.ctキャラクターアクション_ミス五回.t進行LoopDb();
-            if (this.ctキャラクターアクション_叩いてミス != null || CDTXMania.Skin.Game_Chara_Ptn_Miss_tact != 0) this.ctキャラクターアクション_叩いてミス.t進行db();
             if (this.ctキャラクターアクション_10コンボ != null || CDTXMania.Skin.Game_Chara_Ptn_10combo != 0) this.ctキャラクターアクション_10コンボ.t進行db();
             if (this.ctキャラクターアクション_10コンボMAX != null || CDTXMania.Skin.Game_Chara_Ptn_10combo_Max != 0) this.ctキャラクターアクション_10コンボMAX.t進行db();
             if (this.ctキャラクターアクション_ゴーゴースタート != null || CDTXMania.Skin.Game_Chara_Ptn_GoGoStart != 0) this.ctキャラクターアクション_ゴーゴースタート.t進行db();
@@ -112,94 +104,53 @@ namespace DTXMania
             if (this.ctキャラクターアクション_魂MAX != null || CDTXMania.Skin.Game_Chara_Ptn_SoulIn != 0) this.ctキャラクターアクション_魂MAX.t進行db();
 
 
-            if ( this.b風船連打中 != true && this.bマイどんアクション中 == false && CharaAction_Balloon_Delay.b終了値に達した)
+            if ( this.b風船連打中 != true && this.bマイどんアクション中 != true && CharaAction_Balloon_Delay.b終了値に達した)
             {
                 if ( !CDTXMania.stage演奏ドラム画面.bIsGOGOTIME[ 0 ] )
                 {
-                    if (this.ctキャラクターアクション_叩いてミス.b進行中db)
+                    if( CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[ 0 ] >= 100.0 && CDTXMania.Skin.Game_Chara_Ptn_Clear != 0 )
                     {
-                        this.bマイどんアクション中 = false;
-                        if (CDTXMania.Tx.Chara_Miss_tact[0] != null && CDTXMania.Skin.Game_Chara_Ptn_Miss_tact != 0)
-                        {
-                            CDTXMania.Tx.Chara_Miss_tact[(int)this.ctキャラクターアクション_叩いてミス.db現在の値].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
-                        }
-                        if (this.ctキャラクターアクション_叩いてミス.b終了値に達してないdb)
-                        {
-                   //         this.bマイどんアクション中 = false;
-                    //        CDTXMania.stage演奏ドラム画面.nMissどんちゃん再生 = 0;
-                        }
-                            if (this.ctキャラクターアクション_叩いてミス.b終了値に達したdb)
-                        {
-                    //        this.bマイどんアクション中 = false;
-                            this.ctキャラクターアクション_叩いてミス.t停止();
-                            this.ctキャラクターアクション_叩いてミス.db現在の値 = 0D;
-                        }
+                        if(CDTXMania.Skin.Game_Chara_Ptn_Clear != 0)
+                            CDTXMania.Tx.Chara_Normal_Maxed[ this.arクリアモーション番号[(int)this.ctChara_Clear.db現在の値] ].t2D描画( CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
                     }
-                    if (CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == true)
+                    else if( CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[ 0 ] >= 80.0 && CDTXMania.Skin.Game_Chara_Ptn_Clear != 0 )
                     {
-                        if (this.ctキャラクターアクション_ミス五回.b進行中db && this.ctキャラクターアクション_叩いてミス.b進行中db == false && this.ctキャラクターアクション_10コンボ.b進行中db == false && this.ctキャラクターアクション_10コンボMAX.b進行中db == false)
+                        if(CDTXMania.Skin.Game_Chara_Ptn_Clear != 0)
                         {
-                        this.bマイどんアクション中 = false;
-                            if (CDTXMania.Tx.Chara_Miss_5[0] != null && CDTXMania.Skin.Game_Chara_Ptn_Miss_5 != 0)
-                            {
-                                CDTXMania.Tx.Chara_Miss_5[(int)this.ctキャラクターアクション_ミス五回.db現在の値].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
-                            }
+                            CDTXMania.Tx.Chara_Normal_Cleared[ this.arクリアモーション番号[ (int)this.ctChara_Clear.db現在の値 ] ].t2D描画( CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
                         }
-                    }
-                    if (CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == true && this.ctキャラクターアクション_ミス五回.b進行中db == false && this.ctキャラクターアクション_叩いてミス.b進行中db == false && this.ctキャラクターアクション_10コンボ.b進行中db == false && this.ctキャラクターアクション_10コンボMAX.b進行中db == false)
-                    {
-                        this.bマイどんアクション中 = false;
-                        if (CDTXMania.Skin.Game_Chara_Ptn_Miss != 0)
-                        {
-                            CDTXMania.Tx.Chara_Miss[this.arモーション番号[(int)this.ctChara_Normal.db現在の値]].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
-                        }
-
-                    }
-
-
-                    if (CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[0] >= 80.0 && CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == false && this.ctキャラクターアクション_叩いてミス.b進行中db == false && this.ctキャラクターアクション_10コンボ.b進行中db == false && this.ctキャラクターアクション_10コンボMAX.b進行中db == false)
-                    {
-                        if (CDTXMania.Skin.Game_Chara_Ptn_Clear != 0)
-                            CDTXMania.Tx.Chara_Normal_Cleared[this.arクリアモーション番号[(int)this.ctChara_Clear.db現在の値]].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
-                    }
-                    if (CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[0] >= 100.0 && CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == false && this.ctキャラクターアクション_叩いてミス.b進行中db == false && this.ctキャラクターアクション_10コンボ.b進行中db == false && this.ctキャラクターアクション_10コンボMAX.b進行中db == false)
-                    {
-                        if (CDTXMania.Skin.Game_Chara_Ptn_Clear != 0)
-                            CDTXMania.Tx.Chara_Normal_Maxed[this.arクリアモーション番号[(int)this.ctChara_Clear.db現在の値]].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
                     }
                     else
                     {
-                        if (CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[0] < 80.0 )
+                        if (CDTXMania.Skin.Game_Chara_Ptn_Normal != 0)
                         {
-                            if (CDTXMania.Skin.Game_Chara_Ptn_Normal != 0 && CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == false && this.ctキャラクターアクション_叩いてミス.b進行中db == false && this.ctキャラクターアクション_10コンボ.b進行中db == false && this.ctキャラクターアクション_10コンボMAX.b進行中db == false)
-                            {
-                                CDTXMania.Tx.Chara_Normal[this.arモーション番号[(int)this.ctChara_Normal.db現在の値]].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
-                            }
+                            CDTXMania.Tx.Chara_Normal[ this.arモーション番号[ (int)this.ctChara_Normal.db現在の値 ] ].t2D描画( CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
                         }
                     }
                 }
                 else
                 {
-
-                   
-
-                    if ( CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[ 0 ] >= 100.0 && CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0 && CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == false && this.ctキャラクターアクション_叩いてミス.b進行中db == false)
+                    if( CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[ 0 ] >= 100.0 && CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0 )
                     {
-                        if(CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0  && this.ctキャラクターアクション_叩いてミス.b進行中db == false)
+                        if(CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0)
                             CDTXMania.Tx.Chara_GoGoTime_Maxed[this.arゴーゴーモーション番号[(int)this.ctChara_GoGo.db現在の値] ].t2D描画( CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
                     }
                     else
                     {
-                        if(CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0  && this.ctキャラクターアクション_叩いてミス.b進行中db == false)
+                        if(CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0)
                             CDTXMania.Tx.Chara_GoGoTime[ this.arゴーゴーモーション番号[ (int)this.ctChara_GoGo.db現在の値 ] ].t2D描画( CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
                     }
                 }
-                //仕方がない、、、、仕方がなかったのだ！！、、、、すまない、、10コンボどんちゃんよ、、君は、、マイドンアクション中ではなくなったのだ！！、、すまないな。。。
+            }
+
+            if (this.b風船連打中 != true && bマイどんアクション中 == true && CharaAction_Balloon_Delay.b終了値に達した)
+            {
+
                 if (this.ctキャラクターアクション_10コンボ.b進行中db)
                 {
-                    if (CDTXMania.Tx.Chara_10Combo[0] != null && CDTXMania.Skin.Game_Chara_Ptn_10combo != 0)
+                    if(CDTXMania.Tx.Chara_10Combo[0] != null && CDTXMania.Skin.Game_Chara_Ptn_10combo != 0)
                     {
-                        CDTXMania.Tx.Chara_10Combo[(int)this.ctキャラクターアクション_10コンボ.db現在の値].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
+                        CDTXMania.Tx.Chara_10Combo[(int)this.ctキャラクターアクション_10コンボ.db現在の値].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
                     }
                     if (this.ctキャラクターアクション_10コンボ.b終了値に達したdb)
                     {
@@ -207,8 +158,9 @@ namespace DTXMania
                         this.ctキャラクターアクション_10コンボ.t停止();
                         this.ctキャラクターアクション_10コンボ.db現在の値 = 0D;
                     }
-
                 }
+                
+
                 if (this.ctキャラクターアクション_10コンボMAX.b進行中db)
                 {
                     if (CDTXMania.Tx.Chara_10Combo_Maxed[0] != null && CDTXMania.Skin.Game_Chara_Ptn_10combo_Max != 0)
@@ -223,16 +175,6 @@ namespace DTXMania
                     }
 
                 }
-            }
-
-
-                if (this.b風船連打中 != true && bマイどんアクション中 == true && CharaAction_Balloon_Delay.b終了値に達した)
-            {
-
-
-
-
-
 
                 if (this.ctキャラクターアクション_ゴーゴースタート.b進行中db)
                 {
@@ -350,15 +292,12 @@ namespace DTXMania
 
         public void アクションタイマーリセット()
         {
-            ctキャラクターアクション_ミス五回.t停止();
-            ctキャラクターアクション_叩いてミス.t停止();
             ctキャラクターアクション_10コンボ.t停止();
             ctキャラクターアクション_10コンボMAX.t停止();
             ctキャラクターアクション_ゴーゴースタート.t停止();
             ctキャラクターアクション_ゴーゴースタートMAX.t停止();
             ctキャラクターアクション_ノルマ.t停止();
             ctキャラクターアクション_魂MAX.t停止();
-     //       ctキャラクターアクション_ミス五回.db現在の値 = 0D;
             ctキャラクターアクション_10コンボ.db現在の値 = 0D;
             ctキャラクターアクション_10コンボMAX.db現在の値 = 0D;
             ctキャラクターアクション_ゴーゴースタート.db現在の値 = 0D;
@@ -379,8 +318,6 @@ namespace DTXMania
         public int[] arゴーゴーモーション番号;
         public int[] arクリアモーション番号;
 
-        public CCounter ctキャラクターアクション_ミス五回;
-        public CCounter ctキャラクターアクション_叩いてミス;
         public CCounter ctキャラクターアクション_10コンボ;
         public CCounter ctキャラクターアクション_10コンボMAX;
         public CCounter ctキャラクターアクション_ゴーゴースタート;
@@ -402,4 +339,3 @@ namespace DTXMania
         public bool b演奏中;
     }
 }
-
