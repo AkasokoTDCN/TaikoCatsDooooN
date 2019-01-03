@@ -218,6 +218,24 @@ namespace DTXMania
                     Chara_Normal[i] = TxC(GAME + CHARA + @"Normal\" + i.ToString() + ".png");
                 }
             }
+            CDTXMania.Skin.Game_Chara_Ptn_Miss_5 = CDTXMania.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + CHARA + @"Miss_5\"));
+            if (CDTXMania.Skin.Game_Chara_Ptn_Miss_5 != 0)
+            {
+                Chara_Miss_5 = new CTexture[CDTXMania.Skin.Game_Chara_Ptn_Miss_5];
+                for (int i = 0; i < CDTXMania.Skin.Game_Chara_Ptn_Miss_5; i++)
+                {
+                    Chara_Miss_5[i] = TxC(GAME + CHARA + @"Miss_5\" + i.ToString() + ".png");
+                }
+            }
+            CDTXMania.Skin.Game_Chara_Ptn_Miss = CDTXMania.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + CHARA + @"Miss\"));
+            if (CDTXMania.Skin.Game_Chara_Ptn_Miss != 0)
+            {
+                Chara_Miss = new CTexture[CDTXMania.Skin.Game_Chara_Ptn_Miss];
+                for (int i = 0; i < CDTXMania.Skin.Game_Chara_Ptn_Miss; i++)
+                {
+                    Chara_Miss[i] = TxC(GAME + CHARA + @"Miss\" + i.ToString() + ".png");
+                }
+            }
             CDTXMania.Skin.Game_Chara_Ptn_Clear = CDTXMania.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + CHARA + @"Clear\"));
             if (CDTXMania.Skin.Game_Chara_Ptn_Clear != 0)
             {
@@ -252,7 +270,15 @@ namespace DTXMania
                     Chara_GoGoTime_Maxed[i] = TxC(GAME + CHARA + @"GoGo_Max\" + i.ToString() + ".png");
                 }
             }
-
+            CDTXMania.Skin.Game_Chara_Ptn_Miss_tact = CDTXMania.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + CHARA + @"Miss_tact\"));
+            if (CDTXMania.Skin.Game_Chara_Ptn_Miss_tact != 0)
+            {
+                Chara_Miss_tact = new CTexture[CDTXMania.Skin.Game_Chara_Ptn_Miss_tact];
+                for (int i = 0; i < CDTXMania.Skin.Game_Chara_Ptn_Miss_tact; i++)
+                {
+                    Chara_Miss_tact[i] = TxC(GAME + CHARA + @"Miss_tact\" + i.ToString() + ".png");
+                }
+            }
             CDTXMania.Skin.Game_Chara_Ptn_10combo = CDTXMania.t連番画像の枚数を数える(CSkin.Path(BASE + GAME + CHARA + @"10combo\"));
             if (CDTXMania.Skin.Game_Chara_Ptn_10combo != 0)
             {
@@ -1118,7 +1144,10 @@ namespace DTXMania
         #endregion
         #region キャラクター
         public CTexture[] Chara_Normal,
+            Chara_Miss_tact,
+      Chara_Miss,
             Chara_Normal_Cleared,
+   Chara_Miss_5,
             Chara_Normal_Maxed,
             Chara_GoGoTime,
             Chara_GoGoTime_Maxed,
