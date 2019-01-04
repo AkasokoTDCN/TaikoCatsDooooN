@@ -391,7 +391,22 @@ namespace DTXMania
                 else
                 {
                     this.actBackground.On進行描画();
-                    this.actRollChara.On進行描画();
+            
+                    if (CDTXMania.stage演奏ドラム画面.bMiss中[0] == true)
+                    {
+
+                        if (CDTXMania.stage演奏ドラム画面.actBackground.ct上背景スクロール用タイマー[0] != null)
+                        {
+                            double TexSize3d = 1280 / CDTXMania.Tx.Background_Up_Miss[0].szテクスチャサイズ.Width;
+                            for (int l = 1; l < (int)Math.Ceiling(TexSize3d) + 3 + 1; l++)
+                            {
+                                CDTXMania.Tx.Background_Up_Miss[0].n透明度 = ((CDTXMania.stage演奏ドラム画面.actBackground.ct上背景Missタイマー.n現在の値 * 255) / 100);
+                                CDTXMania.Tx.Background_Up_Miss[0].t2D描画(CDTXMania.app.Device, +(l * CDTXMania.Tx.Background_Up_Miss[0].szテクスチャサイズ.Width) - CDTXMania.Tx.Background_Up_Miss[0].szテクスチャサイズ.Width, CDTXMania.Skin.Background_Scroll_Y[0]);
+                            }
+                        }
+
+                    }
+	   　　　　 this.actRollChara.On進行描画();
                 }
 
                 if(!bDoublePlay && CDTXMania.ConfigIni.ShowDancer)
