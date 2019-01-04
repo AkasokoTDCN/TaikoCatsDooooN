@@ -1645,16 +1645,15 @@ namespace DTXMania
                                 break;
                         }
                     }
-      else if (bAutoPlay)
+                     else if (bAutoPlay)
                     {
-                        switch (eJudgeResult)
+                                   switch (eJudgeResult)
                         {
                             case E判定.Perfect:
                             case E判定.Great:
                             case E判定.Good:
                                 {
                                     this.actCombo.n現在のコンボ数[nPlayer]++;
-                                    this.nMissどんちゃん再生 = 0;
                                     if (this.actCombo.ctコンボ加算[nPlayer].b終了値に達してない)
                                     {
                                         this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 1;
@@ -1672,46 +1671,6 @@ namespace DTXMania
                                     else
                                     {
                                         this.actCombo.ctコンボ加算小[nPlayer].n現在の値 = 0;
-                                    }
-                                    if (this.bMiss中どんちゃん[nPlayer] == true && pChip.bGOGOTIME == false)
-                                    {
-                                        double dbUnit = (((60.0 / (CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM))));
-                                        dbUnit = (((60.0 / CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM)));
-
-                                        this.actChara.アクションタイマーリセット();
-                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス = new CCounter(0, CDTXMania.Skin.Game_Chara_Ptn_Miss_tact - 1, (dbUnit / CDTXMania.Skin.Game_Chara_Ptn_Miss_tact) * 2, CSound管理.rc演奏用タイマ);
-                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.t進行db();
-                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.db現在の値 = 0D;
-                                        //   CDTXMania.stage演奏ドラム画面.actChara.bマイどんアクション中 = true;
-                                        if (CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.b終了値に達した)
-                                        {
-                                            this.bMiss中どんちゃん[nPlayer] = false;
-                                        }
-                                    }
-                                    if (this.bMiss中[nPlayer] == true)
-                                    {
-                                        this.bMiss中[nPlayer] = false;
-                                    }
-                                }
-                                break;
-                            case E判定.Poor:
-                            case E判定.Miss:
-                            case E判定.Bad:
-                                {
-
-                                    if (pChip.nチャンネル番号 == 0x1F)
-                                        break;
-                                    this.nMissどんちゃん再生 += 1;
-                                    this.actCombo.n現在のコンボ数[nPlayer] = 0;
-                                    this.actComboVoice.tリセット();
-                                    if (this.bMiss中どんちゃん[nPlayer] == false)
-                                    {
-                                        this.bMiss中どんちゃん[nPlayer] = true;
-                                    }
-                                    if (this.bMiss中[nPlayer] == false)
-                                    {
-                                        this.bMiss中[nPlayer] = true;
-                                        CDTXMania.stage演奏ドラム画面.actBackground.tMissIn();
                                     }
                                 }
                                 break;
@@ -1731,16 +1690,6 @@ namespace DTXMania
                                 {
                                     this.nBranch_Good[nPlayer]++;
                                     if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Great++;
-                                }
-                                break;
-                            case E判定.Poor:
-                            case E判定.Miss:
-                            case E判定.Bad:
-                                {
-                                    if (pChip.nチャンネル番号 == 0x1F)
-                                        break;
-                                    this.nBranch_Miss[nPlayer]++;
-                                    if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Miss++;
                                 }
                                 break;
                             default:
