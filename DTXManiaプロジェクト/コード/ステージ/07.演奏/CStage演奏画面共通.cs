@@ -259,9 +259,11 @@ namespace DTXMania
             this.n表示した歌詞 = 0;
             this.nJPOSSCROLL = new int[ 4 ];
             this.bLEVELHOLD = new bool[]{ false, false, false, false };
-
+            this.bMiss中 = new bool[] { false, false, false, false };
+            this.bMiss中どんちゃん = new bool[] { false, false, false, false };
             this.bDoublePlay = CDTXMania.ConfigIni.nPlayerCount >= 2 ? true : false;
-
+            this.nMissどんちゃん再生 = 0;
+	    
             this.nLoopCount_Clear = 1;
 
             #region[ branch ]
@@ -661,7 +663,8 @@ namespace DTXMania
         protected bool[] b譜面分岐中 = new bool[] { false, false, false, false };
         protected int[] n分岐した回数 = new int[ 4 ];
         protected int[] nJPOSSCROLL = new int[ 4 ];
-
+        public int nMissどんちゃん再生;
+	
         private bool[] b強制的に分岐させた = new bool[] { false, false, false, false };
         private bool[] bLEVELHOLD = new bool[] { false, false, false, false };
         protected int[] nBranch_roll = new int[ 4 ];
@@ -677,7 +680,8 @@ namespace DTXMania
         protected int[] n風船残り = new int[ 4 ];
         protected int[] n現在の連打数 = new int[ 4 ];
         protected E連打State eRollState;
-
+        public bool[] bMiss中;
+        public bool[] bMiss中どんちゃん;
         public CCounter ct制御タイマ;
 
         protected int nタイマ番号;
@@ -1535,46 +1539,19 @@ namespace DTXMania
 				case E楽器パート.BASS:
 					break;
                 case E楽器パート.TAIKO:
-                    if( !bAutoPlay )
+                    if (!bAutoPlay)
                     {
-                        if( pChip.nチャンネル番号 == 0x15 || pChip.nチャンネル番号 == 0x16 || pChip.nチャンネル番号 == 0x17 || pChip.nチャンネル番号 == 0x18 )
+                        if (pChip.nチャンネル番号 == 0x15 || pChip.nチャンネル番号 == 0x16 || pChip.nチャンネル番号 == 0x17 || pChip.nチャンネル番号 == 0x18)
                             break;
 
-					    switch ( eJudgeResult )
-					    {
+                        switch (eJudgeResult)
+                        {
                             case E判定.Perfect:
-                                {
-                                    this.nBranch_Perfect[ nPlayer ]++;
-                                    if( nPlayer == 0 ) this.nヒット数_Auto含まない.Drums.Perfect++;
-                                    this.actCombo.n現在のコンボ数[ nPlayer ]++;
-
-                                    if (this.actCombo.ctコンボ加算[nPlayer].b終了値に達してない)
-                                    {
-                                        this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 1;
-                                    }
-                                    else
-                                    {
-                                        this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 0;
-                                    }
-                                    //this.actCombo.ctコンボ加算.t進行();
-                                    if (this.actCombo.ctコンボ加算小[nPlayer].b終了値に達してない)
-                                    {
-                                        this.actCombo.ctコンボ加算小[nPlayer].n現在の値 = 1;
-                                    }
-                                    else
-                                    {
-                                        this.actCombo.ctコンボ加算小[nPlayer].n現在の値 = 0;
-                                    }
-                                }
-                                break;
                             case E判定.Great:
                             case E判定.Good:
                                 {
-                                    this.nBranch_Good[ nPlayer ]++;
-                                    if( nPlayer == 0 ) this.nヒット数_Auto含まない.Drums.Great++;
-                                    this.actCombo.n現在のコンボ数[ nPlayer ]++;
-                                    //this.actCombo.ctコンボ加算 = new CCounter( 0, 8, 10, CDTXMania.Timer );
-                                    //this.actCombo.ctコンボ加算.t進行();
+                                    this.actCombo.n現在のコンボ数[nPlayer]++;
+                                    this.nMissどんちゃん再生 = 0;
                                     if (this.actCombo.ctコンボ加算[nPlayer].b終了値に達してない)
                                     {
                                         this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 1;
@@ -1593,76 +1570,201 @@ namespace DTXMania
                                     {
                                         this.actCombo.ctコンボ加算小[nPlayer].n現在の値 = 0;
                                     }
+                                    if (this.bMiss中どんちゃん[nPlayer] == true && pChip.bGOGOTIME == false)
+                                    {
+                                        double dbUnit = (((60.0 / (CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM))));
+                                        dbUnit = (((60.0 / CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM)));
 
+                                        this.actChara.アクションタイマーリセット();
+                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス = new CCounter(0, CDTXMania.Skin.Game_Chara_Ptn_Miss_tact - 1, (dbUnit / CDTXMania.Skin.Game_Chara_Ptn_Miss_tact) * 2, CSound管理.rc演奏用タイマ);
+                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.t進行db();
+                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.db現在の値 = 0D;
+                                        //   CDTXMania.stage演奏ドラム画面.actChara.bマイどんアクション中 = true;
+                                        if (CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.b終了値に達した)
+                                        {
+                                            this.bMiss中どんちゃん[nPlayer] = false;
+                                        }
+                                    }
+                                    if (this.bMiss中[nPlayer] == true)
+                                    {
+                                        this.bMiss中[nPlayer] = false;
+                                    }
                                 }
                                 break;
                             case E判定.Poor:
-		    				case E判定.Miss:
-			    			case E判定.Bad:
+                            case E判定.Miss:
+                            case E判定.Bad:
                                 {
-                                    if( pChip.nチャンネル番号 == 0x1F )
+
+                                    if (pChip.nチャンネル番号 == 0x1F)
                                         break;
-                                    this.nBranch_Miss[ nPlayer ]++;
-                                    if( nPlayer == 0 ) this.nヒット数_Auto含まない.Drums.Miss++;
-                                    this.actCombo.n現在のコンボ数[ nPlayer ] = 0;
+                                    this.nMissどんちゃん再生 += 1;
+                                    this.actCombo.n現在のコンボ数[nPlayer] = 0;
                                     this.actComboVoice.tリセット();
-                                    //for (int i = 0; i < 2; i++)
-                                    //{
-                                    //    ctChipAnime[i].t停止();
-                                    //}
+                                    if (this.bMiss中どんちゃん[nPlayer] == false)
+                                    {
+                                        this.bMiss中どんちゃん[nPlayer] = true;
+                                    }
+                                    if (this.bMiss中[nPlayer] == false)
+                                    {
+                                        this.bMiss中[nPlayer] = true;
+                                        CDTXMania.stage演奏ドラム画面.actBackground.tMissIn();
+                                    }
                                 }
-			    				break;
-				    		default:
-					    		this.nヒット数_Auto含む.Drums[ (int) eJudgeResult ]++;
-		    					break;
-			    		}
+                                break;
+                            default:
+                                this.nヒット数_Auto含む.Drums[(int)eJudgeResult]++;
+                                break;
+                        }
+                        switch (eJudgeResult)
+                        {
+                            case E判定.Perfect:
+                            case E判定.Great:
+                                this.nBranch_Perfect[nPlayer]++;
+                                if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Perfect++;
+                                break;
+
+                            case E判定.Good:
+                                {
+                                    this.nBranch_Good[nPlayer]++;
+                                    if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Great++;
+                                }
+                                break;
+                            case E判定.Poor:
+                            case E判定.Miss:
+                            case E判定.Bad:
+                                {
+                                    if (pChip.nチャンネル番号 == 0x1F)
+                                        break;
+                                    this.nBranch_Miss[nPlayer]++;
+                                    if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Miss++;
+                                }
+                                break;
+                            default:
+                                //   this.nヒット数_Auto含む.Drums[(int)eJudgeResult]++;
+                                break;
+                        }
                     }
-					else if ( bAutoPlay )
-					{
-						switch ( eJudgeResult )
-						{
+      else if (bAutoPlay)
+                    {
+                        switch (eJudgeResult)
+                        {
                             case E判定.Perfect:
                             case E判定.Great:
                             case E判定.Good:
                                 {
-                                    if( pChip.nチャンネル番号 != 0x15 && pChip.nチャンネル番号 != 0x16 && pChip.nチャンネル番号 != 0x17 && pChip.nチャンネル番号 != 0x18 )
+                                    this.actCombo.n現在のコンボ数[nPlayer]++;
+                                    this.nMissどんちゃん再生 = 0;
+                                    if (this.actCombo.ctコンボ加算[nPlayer].b終了値に達してない)
                                     {
-                                        this.nBranch_Perfect[ nPlayer ]++;
-                                        if( nPlayer == 0 ) this.nヒット数_Auto含む.Drums.Perfect++;
-                                        this.actCombo.n現在のコンボ数[ nPlayer ]++;
-                                        //this.actCombo.ctコンボ加算.t進行();
-                                        if (this.actCombo.ctコンボ加算[nPlayer].b終了値に達してない)
+                                        this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 1;
+                                    }
+                                    else
+                                    {
+                                        this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 0;
+                                    }
+
+                                    //this.actCombo.ctコンボ加算.t進行();
+                                    if (this.actCombo.ctコンボ加算小[nPlayer].b終了値に達してない)
+                                    {
+                                        this.actCombo.ctコンボ加算小[nPlayer].n現在の値 = 1;
+                                    }
+                                    else
+                                    {
+                                        this.actCombo.ctコンボ加算小[nPlayer].n現在の値 = 0;
+                                    }
+                                    if (this.bMiss中どんちゃん[nPlayer] == true && pChip.bGOGOTIME == false)
+                                    {
+                                        double dbUnit = (((60.0 / (CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM))));
+                                        dbUnit = (((60.0 / CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM)));
+
+                                        this.actChara.アクションタイマーリセット();
+                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス = new CCounter(0, CDTXMania.Skin.Game_Chara_Ptn_Miss_tact - 1, (dbUnit / CDTXMania.Skin.Game_Chara_Ptn_Miss_tact) * 2, CSound管理.rc演奏用タイマ);
+                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.t進行db();
+                                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.db現在の値 = 0D;
+                                        //   CDTXMania.stage演奏ドラム画面.actChara.bマイどんアクション中 = true;
+                                        if (CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_叩いてミス.b終了値に達した)
                                         {
-                                            this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 1;
+                                            this.bMiss中どんちゃん[nPlayer] = false;
                                         }
-                                        else
-                                        {
-                                            this.actCombo.ctコンボ加算[nPlayer].n現在の値 = 0;
-                                        }
+                                    }
+                                    if (this.bMiss中[nPlayer] == true)
+                                    {
+                                        this.bMiss中[nPlayer] = false;
                                     }
                                 }
                                 break;
-
-							default:
+                            case E判定.Poor:
+                            case E判定.Miss:
+                            case E判定.Bad:
                                 {
-                                    if( pChip.nチャンネル番号 != 0x15 && pChip.nチャンネル番号 != 0x16 && pChip.nチャンネル番号 != 0x17 && pChip.nチャンネル番号 != 0x18 && pChip.nチャンネル番号 != 0x1F )
+
+                                    if (pChip.nチャンネル番号 == 0x1F)
+                                        break;
+                                    this.nMissどんちゃん再生 += 1;
+                                    this.actCombo.n現在のコンボ数[nPlayer] = 0;
+                                    this.actComboVoice.tリセット();
+                                    if (this.bMiss中どんちゃん[nPlayer] == false)
                                     {
-                                        this.nBranch_Miss[ nPlayer ]++;
-								        this.actCombo.n現在のコンボ数[ nPlayer ] = 0;
-                                        this.actComboVoice.tリセット();
-                                        //for (int i = 0; i < 2; i++)
-                                        //{
-                                        //    ctChipAnime[i].t停止();
-                                        //}
+                                        this.bMiss中どんちゃん[nPlayer] = true;
+                                    }
+                                    if (this.bMiss中[nPlayer] == false)
+                                    {
+                                        this.bMiss中[nPlayer] = true;
+                                        CDTXMania.stage演奏ドラム画面.actBackground.tMissIn();
                                     }
                                 }
-								break;
-						}
-					}
+                                break;
+                            default:
+                                this.nヒット数_Auto含む.Drums[(int)eJudgeResult]++;
+                                break;
+                        }
+                        switch (eJudgeResult)
+                        {
+                            case E判定.Perfect:
+                            case E判定.Great:
+                                this.nBranch_Perfect[nPlayer]++;
+                                if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Perfect++;
+                                break;
+
+                            case E判定.Good:
+                                {
+                                    this.nBranch_Good[nPlayer]++;
+                                    if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Great++;
+                                }
+                                break;
+                            case E判定.Poor:
+                            case E判定.Miss:
+                            case E判定.Bad:
+                                {
+                                    if (pChip.nチャンネル番号 == 0x1F)
+                                        break;
+                                    this.nBranch_Miss[nPlayer]++;
+                                    if (nPlayer == 0) this.nヒット数_Auto含まない.Drums.Miss++;
+                                }
+                                break;
+                            default:
+                                //   this.nヒット数_Auto含む.Drums[(int)eJudgeResult]++;
+                                break;
+                        }
+                    }
                     #region[ コンボ音声 ]
-                    if( pChip.nチャンネル番号 < 0x15 || ( pChip.nチャンネル番号 >= 0x1A ) )
+                    
+                    if (this.nMissどんちゃん再生 >= 5)
                     {
-                        if( this.actCombo.n現在のコンボ数[ nPlayer ] % 100 == 0 && this.actCombo.n現在のコンボ数[ nPlayer ] > 0 )
+                        double dbUnit = (((60.0 / (CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM))));
+                        dbUnit = (((60.0 / CDTXMania.stage演奏ドラム画面.actPlayInfo.dbBPM)));
+
+                        //this.actChara.アクションタイマーリセット();
+                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_ミス五回 = new CCounter(0, CDTXMania.Skin.Game_Chara_Ptn_Miss_5 - 1, (dbUnit / CDTXMania.Skin.Game_Chara_Ptn_Miss_5), CSound管理.rc演奏用タイマ);
+                        CDTXMania.stage演奏ドラム画面.actChara.ctキャラクターアクション_ミス五回.t進行LoopDb();
+
+                    }
+		    
+		    if( pChip.nチャンネル番号 < 0x15 || ( pChip.nチャンネル番号 >= 0x1A ) )
+                    {
+                    
+		    if( this.actCombo.n現在のコンボ数[ nPlayer ] % 100 == 0 && this.actCombo.n現在のコンボ数[ nPlayer ] > 0 )
                         {
                             this.actComboBalloon.Start( this.actCombo.n現在のコンボ数[ nPlayer ], nPlayer );
                         }
