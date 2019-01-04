@@ -30,7 +30,11 @@ namespace DTXMania
         //    this.ct上背景フェードタイマー[player] = new CCounter( 0, 100, 6, CDTXMania.Timer );
         //    this.eFadeMode = EFIFOモード.フェードアウト;
         //}
-
+        public void tMissIn()
+        {
+            this.ct上背景Missタイマー = new CCounter(0, 100, 6, CDTXMania.Timer);
+            this.eFadeMode = EFIFOモード.フェードイン;
+        }
         public void ClearIn(int player)
         {
             this.ct上背景クリアインタイマー[player] = new CCounter(0, 100, 2, CDTXMania.Timer);
@@ -230,7 +234,9 @@ namespace DTXMania
 
             //if (this.ct桜モーション用タイマー3 != null)
                 //this.ct桜モーション用タイマー3.t進行Loop();
-
+           
+            if (this.ct上背景Missタイマー != null)
+                this.ct上背景Missタイマー.t進行();
             #region 1P-2P-上背景
             for (int i = 0; i < 2; i++)
             {
@@ -484,6 +490,7 @@ namespace DTXMania
         //private CTexture tx下背景メイン;
         //private CTexture tx下背景クリアメイン;
         //private CTexture tx下背景クリアサブ1;
+        public CCounter ct上背景Missタイマー;
         private EFIFOモード eFadeMode;
         //-----------------
         #endregion
