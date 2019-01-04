@@ -116,10 +116,19 @@ namespace DTXMania
             {
                 if ( !CDTXMania.stage演奏ドラム画面.bIsGOGOTIME[ 0 ] )
                 {
-                    if (this.ctキャラクターアクション_叩いてミス.b進行中db)
+                    if (CDTXMania.stage演奏ドラム画面.bIsGOGOTIME[0] == true)
+                    {
+                        bGOGO許可 = false;
+                    }
+                    if (CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == true)
+                    {
+                        bGOGO許可 = true;
+                    }
+
+                    if (this.ctキャラクターアクション_叩いてミス.b進行中db && bGOGO許可 == true)
                     {
                         this.bマイどんアクション中 = false;
-                        if (CDTXMania.Tx.Chara_Miss_tact[0] != null && CDTXMania.Skin.Game_Chara_Ptn_Miss_tact != 0)
+                        if (CDTXMania.Tx.Chara_Miss_tact[0] != null && CDTXMania.Skin.Game_Chara_Ptn_Miss_tact != 0 && this.ctChara_GoGo.b進行中db == true)
                         {
                             CDTXMania.Tx.Chara_Miss_tact[(int)this.ctキャラクターアクション_叩いてミス.db現在の値].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
                         }
@@ -177,22 +186,23 @@ namespace DTXMania
                             }
                         }
                     }
+
                 }
                 else
                 {
-
-                   
-
-                    if ( CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[ 0 ] >= 100.0 && CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0 && CDTXMania.stage演奏ドラム画面.bMiss中どんちゃん[0] == false && this.ctキャラクターアクション_叩いてミス.b進行中db == false)
+                    if (CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[0] >= 100.0)
                     {
-                        if(CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0  && this.ctキャラクターアクション_叩いてミス.b進行中db == false)
-                            CDTXMania.Tx.Chara_GoGoTime_Maxed[this.arゴーゴーモーション番号[(int)this.ctChara_GoGo.db現在の値] ].t2D描画( CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
+                        if (CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0)
+                            CDTXMania.Tx.Chara_GoGoTime_Maxed[this.arゴーゴーモーション番号[(int)this.ctChara_GoGo.db現在の値]].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
                     }
-                    else
+                    if (CDTXMania.stage演奏ドラム画面.actGauge.db現在のゲージ値[0] < 100.0)
                     {
-                        if(CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0  && this.ctキャラクターアクション_叩いてミス.b進行中db == false)
-                            CDTXMania.Tx.Chara_GoGoTime[ this.arゴーゴーモーション番号[ (int)this.ctChara_GoGo.db現在の値 ] ].t2D描画( CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0] );
+                        if (CDTXMania.Skin.Game_Chara_Ptn_GoGo != 0)
+                            CDTXMania.Tx.Chara_GoGoTime[this.arゴーゴーモーション番号[(int)this.ctChara_GoGo.db現在の値]].t2D描画(CDTXMania.app.Device, CDTXMania.Skin.Game_Chara_X[0], CDTXMania.Skin.Game_Chara_Y[0]);
                     }
+
+
+
                 }
                 //仕方がない、、、、仕方がなかったのだ！！、、、、すまない、、10コンボどんちゃんよ、、君は、、マイドンアクション中ではなくなったのだ！！、、すまないな。。。
                 if (this.ctキャラクターアクション_10コンボ.b進行中db)
@@ -400,6 +410,8 @@ namespace DTXMania
 
         public bool b風船連打中;
         public bool b演奏中;
+
+        public bool bGOGO許可 { get; private set; }
     }
 }
 
